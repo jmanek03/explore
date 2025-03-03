@@ -1,31 +1,40 @@
-import React, { useState } from "react";
-import Card from "../../shared/components/UIElements/Card";
-import Button from "../../shared/components/FormElements/Button";
-import Modal from "../../shared/components/UIElements/Modal";
-import Map from "../../shared/components/UIElements/Map";
-import "./PlaceItem.css";
+import React, { useState, useContext } from 'react';
 
-const PlaceItem = (props) => {
+import Card from '../../shared/components/UIElements/Card';
+import Button from '../../shared/components/FormElements/Button';
+import Modal from '../../shared/components/UIElements/Modal';
+import Map from '../../shared/components/UIElements/Map';
+import { AuthContext } from '../../shared/context/auth-context';
+import './PlaceItem.css';
+
+const PlaceItem = props => {
+  const auth = useContext(AuthContext);
   const [showMap, setShowMap] = useState(false);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
 
   const openMapHandler = () => setShowMap(true);
+
   const closeMapHandler = () => setShowMap(false);
 
-  const showDeleteWarningHandler = () => setShowConfirmModal(true);
-  const cancelDeleteHandler = () => setShowConfirmModal(false);
+  const showDeleteWarningHandler = () => {
+    setShowConfirmModal(true);
+  };
+
+  const cancelDeleteHandler = () => {
+    setShowConfirmModal(false);
+  };
 
   const confirmDeleteHandler = () => {
     setShowConfirmModal(false);
-    console.log("DELETING...");
-  }
+    console.log('DELETING...');
+  };
 
   return (
     <React.Fragment>
       <Modal
         show={showMap}
         onCancel={closeMapHandler}
-        header={props.title}
+        header={props.address}
         contentClass="place-item__modal-content"
         footerClass="place-item__modal-actions"
         footer={<Button onClick={closeMapHandler}>CLOSE</Button>}
@@ -51,8 +60,8 @@ const PlaceItem = (props) => {
         }
       >
         <p>
-          Do you want to proceed and delete this place? Please Note that it
-          cannot be undone thereafter.
+          Do you want to proceed and delete this place? Please note that it
+          can't be undone thereafter.
         </p>
       </Modal>
       <li className="place-item">
@@ -69,8 +78,15 @@ const PlaceItem = (props) => {
             <Button inverse onClick={openMapHandler}>
               VIEW ON MAP
             </Button>
-            <Button to={`/places/${props.id}`}>EDIT</Button>
-            <Button danger onClick={showDeleteWarningHandler}>DELETE</Button>
+            {auth.isLoggedIn && (
+              <Button to={`/places/${props.id}`}>EDIT</Button>
+            )}
+
+            {auth.isLoggedIn && (
+              <Button danger onClick={showDeleteWarningHandler}>
+                DELETE
+              </Button>
+            )}
           </div>
         </Card>
       </li>

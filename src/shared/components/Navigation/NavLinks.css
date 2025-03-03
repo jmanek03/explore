@@ -64,14 +64,14 @@
   
     .nav-links button {
       border: 1px solid white;
-      color: white;
+      color: #292929;
       background: transparent;
     }
     
     .nav-links button:hover,
     .nav-links button:active {
       background: rgb(0, 174, 255);
-      color: #292929;
+      color: rgb(255, 253, 253);
     }
   }
   

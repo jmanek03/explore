@@ -1,0 +1,54 @@
+.main-navigation {
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* Adjusts spacing between items */
+}
+
+.main-navigation__title {
+    margin: 0; /* Remove default margin */
+    display: flex;
+    align-items: center; /* Center the logo vertically */
+}
+
+.App-logo {
+    height: 50px; /* Adjust height as needed */
+    width: auto; /* Maintain aspect ratio */
+    margin-right: auto; /* Pushes the logo to the left */
+}
+
+.main-navigation__menu-btn {
+    width: 3rem;
+    height: 3rem;
+    background: transparent;
+    border: none;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    margin-right: 2rem;
+    cursor: pointer;
+}
+
+.main-navigation__menu-btn span {
+    display: block;
+    width: 3rem;
+    height: 2.5px;
+    background: black;
+}
+
+.main-navigation__header-nav {
+    display: none;
+}
+
+.main-navigation__drawer-nav {
+    height: 100%;
+}
+
+@media (min-width: 768px) {
+    .main-navigation__menu-btn {
+        display: none;
+    }
+
+    .main-navigation__header-nav {
+        display: block;
+    }
+}

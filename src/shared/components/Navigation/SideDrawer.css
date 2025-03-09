@@ -1,0 +1,23 @@
+.side-drawer {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 100;
+  height: 100vh;
+  width: 70%;
+  background: #9ACBD0; /* Updated background color */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
+}
+
+.side-drawer h1, .side-drawer h2, .side-drawer h3 {
+  color: #2973B2; /* Updated text color for headings */
+}
+
+.side-drawer a {
+  color: ###48A6A7; /* Updated link color */
+  text-decoration: none;
+}
+
+.side-drawer a:hover {
+  color: #F2EFE7; /* Updated hover color for links */
+}

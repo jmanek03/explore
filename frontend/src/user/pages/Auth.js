@@ -42,8 +42,10 @@ const Auth = () => {
     const params = new URLSearchParams(window.location.search);
     const token = params.get('token');
     const userId = params.get('userId');
+    const name = params.get('name');
+    const image = params.get('image');
     if (token && userId) {
-      auth.login(userId, token);
+      auth.login(userId, token, name, image);
       window.history.replaceState({}, document.title, window.location.pathname); // Clean up URL
     }
   }, [auth]);

@@ -54,7 +54,7 @@ Visit the hosted website:
 ## 📝 How to Use the Hosted Website
 
 1. **Visit the Website**  
-   Go to [https://explore-7o2c.onrender.com](https://explore-7o2c.onrender.com)
+   Go to [https://explore-mu-three.vercel.app/](https://explore-mu-three.vercel.app/)
 
 2. **Browse Users**  
    - The homepage lists all registered users and the number of places they've shared.
@@ -84,7 +84,7 @@ Visit the hosted website:
 > **Note:** For local development, clone the repo and set up `.env` files for both frontend and backend as per the provided `.env.example`.
 
 ```bash
-git clone https://github.com/yourusername/explore.git
+git clone https://github.com/jmanek03/explore.git
 cd explore
 ```
 

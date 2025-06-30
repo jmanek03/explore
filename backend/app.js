@@ -31,6 +31,14 @@ app.use((req, res, next) => {
   next();
 });
 
+app.use((req, res, next) => {
+  res.setHeader(
+    'Content-Security-Policy',
+    "default-src *; font-src 'self' data: https://fonts.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src * data:; script-src 'self' 'unsafe-inline' 'unsafe-eval';"
+  );
+  next();
+});
+
 app.use('/api/places', placesRoutes);
 app.use('/api/users', usersRoutes);
 
@@ -49,7 +57,7 @@ passport.use(
     {
       clientID: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-      callbackURL: process.env.BACKEND_URL + '/api/users/auth/google/callback'
+      callbackURL: process.env.BACKEND_URL + '/users/auth/google/callback'
     },
     async (accessToken, refreshToken, profile, done) => {
       try {

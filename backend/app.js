@@ -34,7 +34,7 @@ app.use((req, res, next) => {
 app.use((req, res, next) => {
   res.setHeader(
     'Content-Security-Policy',
-    "default-src *; font-src 'self' data: https://fonts.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src * data:; script-src 'self' 'unsafe-inline' 'unsafe-eval';"
+    "default-src *; font-src 'self' data: https://fonts.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net; img-src * data:; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net;"
   );
   next();
 });
@@ -98,7 +98,9 @@ app.use((error, req, res, next) => {
   if (res.headerSent) {
     return next(error);
   }
-  res.status(error.code || 500);
+  // Ensure status code is a number
+  const status = typeof error.code === 'number' ? error.code : 500;
+  res.status(status);
   res.json({ message: error.message || 'An unknown error occurred!' });
 });
 

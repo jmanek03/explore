@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 
 import Card from '../../shared/components/UIElements/Card';
 import Input from '../../shared/components/FormElements/Input';
@@ -6,6 +6,8 @@ import Button from '../../shared/components/FormElements/Button';
 import ErrorModal from '../../shared/components/UIElements/ErrorModal';
 import LoadingSpinner from '../../shared/components/UIElements/LoadingSpinner';
 import ImageUpload from '../../shared/components/FormElements/ImageUpload';
+import PasswordInput from '../../shared/components/FormElements/PasswordInput';
+import GoogleButton from '../../shared/components/FormElements/GoogleButton';
 import {
   VALIDATOR_EMAIL,
   VALIDATOR_MINLENGTH,
@@ -35,7 +37,20 @@ const Auth = () => {
     false
   );
 
-  const switchModeHandler = () => {
+  // Google OAuth: handle redirect with token
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const token = params.get('token');
+    const userId = params.get('userId');
+    if (token && userId) {
+      auth.login(userId, token);
+      window.history.replaceState({}, document.title, window.location.pathname); // Clean up URL
+    }
+  }, [auth]);
+
+  // Only allow switching via link, not button
+  const switchModeHandler = (e) => {
+    e.preventDefault();
     if (!isLoginMode) {
       setFormData(
         {
@@ -100,60 +115,97 @@ const Auth = () => {
     }
   };
 
+  const handleGoogleSignIn = () => {
+    window.location.href = `${process.env.REACT_APP_BACKEND_URL}/users/auth/google`;
+  };
+
   return (
-    <React.Fragment>
-      <ErrorModal error={error} onClear={clearError} />
-      <Card className="authentication">
-        {isLoading && <LoadingSpinner asOverlay />}
-        <h2>Login Required</h2>
-        <hr />
-        <form onSubmit={authSubmitHandler}>
-          {!isLoginMode && (
+    <div className="auth-page">
+      <div className="auth-form-section">
+        <Card className="authentication auth-card small-font">
+          <h2 className="authentication__header">{isLoginMode ? 'Login to Xplore' : 'Sign Up for Xplore'}</h2>
+          <p className="authentication__subtitle">
+            {isLoginMode ? 'Welcome back! Please login to continue.' : 'Create your account to start exploring.'}
+          </p>
+          <GoogleButton onClick={handleGoogleSignIn} />
+          <div className="auth-divider">
+            <span>or</span>
+          </div>
+          <ErrorModal error={error} onClear={clearError} />
+          {isLoading && <LoadingSpinner asOverlay />}
+          <form onSubmit={authSubmitHandler} className="auth-form">
+            {!isLoginMode && (
+              <Input
+                element="input"
+                id="name"
+                type="text"
+                label="Your Name"
+                validators={[VALIDATOR_REQUIRE()]}
+                errorText="Please enter a name."
+                onInput={inputHandler}
+                placeholder="Enter your name"
+              />
+            )}
+            {!isLoginMode && (
+              <div className="image-upload-row">
+                <ImageUpload
+                  center
+                  id="image"
+                  onInput={inputHandler}
+                  errorText="Please provide an image."
+                  inline
+                />
+              </div>
+            )}
             <Input
               element="input"
-              id="name"
-              type="text"
-              label="Your Name"
-              validators={[VALIDATOR_REQUIRE()]}
-              errorText="Please enter a name."
+              id="email"
+              type="email"
+              label="E-Mail"
+              validators={[VALIDATOR_EMAIL()]}
+              errorText="Please enter a valid email address."
               onInput={inputHandler}
+              placeholder="Enter your email"
             />
-          )}
-          {!isLoginMode && (
-            <ImageUpload
-              center
-              id="image"
+            <PasswordInput
+              id="password"
+              label="Password"
+              validators={[VALIDATOR_MINLENGTH(6)]}
+              errorText="Please enter a valid password, at least 6 characters."
               onInput={inputHandler}
-              errorText="Please provide an image."
+              placeholder="Enter your password"
             />
-          )}
-          <Input
-            element="input"
-            id="email"
-            type="email"
-            label="E-Mail"
-            validators={[VALIDATOR_EMAIL()]}
-            errorText="Please enter a valid email address."
-            onInput={inputHandler}
-          />
-          <Input
-            element="input"
-            id="password"
-            type="password"
-            label="Password"
-            validators={[VALIDATOR_MINLENGTH(6)]}
-            errorText="Please enter a valid password, at least 6 characters."
-            onInput={inputHandler}
-          />
-          <Button type="submit" disabled={!formState.isValid}>
-            {isLoginMode ? 'LOGIN' : 'SIGNUP'}
-          </Button>
-        </form>
-        <Button inverse onClick={switchModeHandler}>
-          SWITCH TO {isLoginMode ? 'SIGNUP' : 'LOGIN'}
-        </Button>
-      </Card>
-    </React.Fragment>
+            <Button type="submit" disabled={!formState.isValid}>
+              {isLoginMode ? 'LOGIN' : 'SIGNUP'}
+            </Button>
+          </form>
+          <div className="auth-bottom-link">
+            {isLoginMode ? (
+              <span>
+                Not a member?{' '}
+                <a href="#" className="auth-link" onClick={switchModeHandler}>
+                  Sign up
+                </a>
+              </span>
+            ) : (
+              <span>
+                Already have an account?{' '}
+                <a href="#" className="auth-link" onClick={switchModeHandler}>
+                  Sign in
+                </a>
+              </span>
+            )}
+          </div>
+        </Card>
+      </div>
+      <div className="auth-image-section">
+        <img
+          src={require('../../assets/login.jpg')}
+          alt="Login Visual"
+          className="auth-image"
+        />
+      </div>
+    </div>
   );
 };
 

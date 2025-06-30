@@ -6,6 +6,9 @@ const path = require('path');
 const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
+const passport = require('passport');
+const User = require('./models/user');
+const GoogleStrategy = require('passport-google-oauth20').Strategy;
 
 const placesRoutes = require('./routes/places-routes');
 const usersRoutes = require('./routes/users-routes');
@@ -39,6 +42,39 @@ if (process.env.NODE_ENV === 'production') {
     res.sendFile(path.join(__dirname, '..', 'frontend', 'build', 'index.html'));
   });
 }
+
+// --- Google OAuth setup ---
+passport.use(
+  new GoogleStrategy(
+    {
+      clientID: process.env.GOOGLE_CLIENT_ID,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+      callbackURL: process.env.BACKEND_URL + '/api/users/auth/google/callback'
+    },
+    async (accessToken, refreshToken, profile, done) => {
+      try {
+        let user = await User.findOne({ email: profile.emails[0].value });
+        if (!user) {
+          // Create a random password for Google users
+          const randomPassword = Math.random().toString(36).slice(-8);
+          user = new User({
+            name: profile.displayName,
+            email: profile.emails[0].value,
+            image: profile.photos[0].value,
+            password: randomPassword,
+            places: []
+          });
+          await user.save();
+        }
+        done(null, user);
+      } catch (err) {
+        done(err, null);
+      }
+    }
+  )
+);
+
+app.use(passport.initialize());
 
 app.use((req, res, next) => {
   const error = new HttpError('Could not find this route.', 404);

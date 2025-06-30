@@ -59,6 +59,8 @@ const Input = props => {
         onChange={changeHandler}
         onBlur={touchHandler}
         value={inputState.value}
+        autoComplete={props.type === 'email' ? 'email' : undefined}
+        className="google-like-input"
       />
     ) : (
       <textarea
@@ -67,6 +69,7 @@ const Input = props => {
         onChange={changeHandler}
         onBlur={touchHandler}
         value={inputState.value}
+        className="google-like-input"
       />
     );
 

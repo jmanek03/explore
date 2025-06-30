@@ -161,6 +161,34 @@ const login = async (req, res, next) => {
   });
 };
 
+// --- Google OAuth callback ---
+exports.googleAuthCallback = async (req, res, next) => {
+  // req.user is set by passport after successful authentication
+  const user = req.user;
+  if (!user) {
+    return next(new HttpError('Google authentication failed.', 401));
+  }
+
+  // Generate JWT
+  let token;
+  try {
+    token = jwt.sign(
+      { userId: user.id, email: user.email },
+      process.env.JWT_SECRET,
+      { expiresIn: '1h' }
+    );
+  } catch (err) {
+    return next(new HttpError('Google login failed, please try again later.', 500));
+  }
+
+  // Redirect to frontend with token and userId as query params (or send JSON if API)
+  // Example: http://localhost:3000/auth?token=...&userId=...
+  const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:3000';
+  res.redirect(
+    `${frontendUrl}/auth?token=${token}&userId=${user.id}&name=${encodeURIComponent(user.name)}&email=${encodeURIComponent(user.email)}&image=${encodeURIComponent(user.image)}`
+  );
+};
+
 exports.getUsers = getUsers;
 exports.signup = signup;
 exports.login = login;

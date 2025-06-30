@@ -1,5 +1,6 @@
 const express = require('express');
 const { check } = require('express-validator');
+const passport = require('passport');
 
 const usersController = require('../controllers/users-controllers');
 const fileUpload = require('../middleware/file-upload');
@@ -24,5 +25,14 @@ router.post(
 );
 
 router.post('/login', usersController.login);
+
+// Google OAuth routes
+router.get('/auth/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
+
+router.get(
+  '/auth/google/callback',
+  passport.authenticate('google', { session: false, failureRedirect: '/auth?error=google' }),
+  usersController.googleAuthCallback
+);
 
 module.exports = router;

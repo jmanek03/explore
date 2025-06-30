@@ -84,7 +84,7 @@ Visit the hosted website:
 > **Note:** For local development, clone the repo and set up `.env` files for both frontend and backend as per the provided `.env.example`.
 
 ```bash
-git clone https://github.com/yourusername/explore.git
+git clone https://github.com/jmanek03/explore.git
 cd explore
 ```
 

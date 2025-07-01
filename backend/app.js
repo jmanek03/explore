@@ -38,13 +38,16 @@ app.use((req, res, next) => {
       "default-src 'self';",
       "font-src 'self' https://fonts.gstatic.com data:;",
       "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net;",
-      "img-src 'self' data: https://maps.googleapis.com https://maps.gstatic.com https://cdn.jsdelivr.net;",
+      "style-src-elem 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net;",
       "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://maps.googleapis.com https://maps.gstatic.com https://cdn.jsdelivr.net;",
+      "script-src-elem 'self' 'unsafe-inline' 'unsafe-eval' https://maps.googleapis.com https://maps.gstatic.com https://cdn.jsdelivr.net;",
+      "img-src 'self' data: https://maps.googleapis.com https://maps.gstatic.com https://cdn.jsdelivr.net;",
       "connect-src 'self' https://explore-7o2c.onrender.com;",
     ].join(" ")
   );
   next();
 });
+
 
 
 

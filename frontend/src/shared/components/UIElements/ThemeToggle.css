@@ -14,15 +14,16 @@
   outline: none;
   font-size: 1.1rem;
   margin-left: 0.5rem;
-  position: relative;
+  position: static; /* Remove absolute positioning */
   z-index: 10;
 }
 
 .theme-toggle-btn--corner {
-  position: absolute;
-  top: 1.1rem;
-  right: 2.2rem;
-  /* Adjust right as needed for your layout */
+  position: static; /* Ensure inline with search bar */
+  margin-left: 0.5rem;
+  margin-top: 0;
+  right: unset;
+  top: unset;
 }
 
 .theme-toggle-btn:hover,
@@ -47,4 +48,16 @@
 @keyframes theme-toggle-spin {
   0% { transform: rotate(0deg);}
   100% { transform: rotate(180deg);}
+}
+
+@media (max-width: 600px) {
+  .theme-toggle-btn {
+    width: 1.7rem;
+    height: 1.7rem;
+    font-size: 1rem;
+    margin-left: 0.3rem;
+  }
+  .theme-toggle-btn--corner {
+    margin-left: 0.3rem;
+  }
 }

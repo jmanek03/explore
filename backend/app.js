@@ -38,10 +38,8 @@ app.use((req, res, next) => {
       "default-src 'self';",
       "font-src 'self' https://fonts.gstatic.com data:;",
       "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net;",
-      "style-src-elem 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net;",
       "img-src 'self' data: https://cdn.jsdelivr.net https://maps.googleapis.com https://maps.gstatic.com;",
       "script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://maps.googleapis.com https://maps.gstatic.com;",
-      "script-src-elem 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://maps.googleapis.com https://maps.gstatic.com;",
     ].join(" ")
   );
   next();

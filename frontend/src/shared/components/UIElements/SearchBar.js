@@ -8,19 +8,19 @@ const ThemeContext = React.createContext({
 
 export const useTheme = () => useContext(ThemeContext);
 
+// Smaller toggle button, positioned absolutely for top-right placement
 const ThemeToggle = () => {
   const { theme, toggleTheme } = useTheme();
   return (
     <button
       type="button"
-      className="theme-toggle-btn"
+      className="theme-toggle-btn theme-toggle-btn--corner"
       aria-label="Toggle light/dark mode"
       onClick={toggleTheme}
       title={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
     >
       {theme === 'dark' ? (
-        // Sun icon
-        <svg width="22" height="22" fill="none" viewBox="0 0 24 24">
+        <svg width="16" height="16" fill="none" viewBox="0 0 24 24">
           <circle cx="12" cy="12" r="5.5" stroke="#fbbf24" strokeWidth="2"/>
           <g stroke="#fbbf24" strokeWidth="2">
             <line x1="12" y1="2" x2="12" y2="4"/>
@@ -34,8 +34,7 @@ const ThemeToggle = () => {
           </g>
         </svg>
       ) : (
-        // Moon icon
-        <svg width="22" height="22" fill="none" viewBox="0 0 24 24">
+        <svg width="16" height="16" fill="none" viewBox="0 0 24 24">
           <path
             d="M21 12.79A9 9 0 1111.21 3a7 7 0 109.79 9.79z"
             stroke="#2563eb"
@@ -81,6 +80,7 @@ const SearchBar = ({ onSearch, placeholder, instant }) => {
           </svg>
         </button>
       </form>
+      {/* The toggle is absolutely positioned, so just render it here */}
       <ThemeToggle />
     </div>
   );

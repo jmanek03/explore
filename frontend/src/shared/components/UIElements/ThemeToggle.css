@@ -1,0 +1,50 @@
+.theme-toggle-btn {
+  background: var(--searchbar-bg, #fff);
+  border: 1.5px solid #2563eb;
+  color: #2563eb;
+  border-radius: 50%;
+  width: 2.2rem;
+  height: 2.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.18s, border 0.18s, box-shadow 0.18s, transform 0.18s;
+  box-shadow: 0 1px 3px rgba(37, 99, 235, 0.06);
+  outline: none;
+  font-size: 1.1rem;
+  margin-left: 0.5rem;
+  position: relative;
+  z-index: 10;
+}
+
+.theme-toggle-btn--corner {
+  position: absolute;
+  top: 1.1rem;
+  right: 2.2rem;
+  /* Adjust right as needed for your layout */
+}
+
+.theme-toggle-btn:hover,
+.theme-toggle-btn:focus {
+  background: #f1f5f9;
+  border-color: #1d4ed8;
+  transform: scale(1.08) rotate(-8deg);
+  box-shadow: 0 4px 16px rgba(37, 99, 235, 0.10);
+}
+
+.theme-toggle-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.25s cubic-bezier(.4,0,.2,1);
+}
+
+.theme-toggle-btn.dark .theme-toggle-icon {
+  animation: theme-toggle-spin 0.5s;
+}
+
+@keyframes theme-toggle-spin {
+  0% { transform: rotate(0deg);}
+  100% { transform: rotate(180deg);}
+}

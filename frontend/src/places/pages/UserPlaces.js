@@ -7,6 +7,7 @@ import LoadingSpinner from '../../shared/components/UIElements/LoadingSpinner';
 import { useHttpClient } from '../../shared/hooks/http-hook';
 import Skeleton from '../../shared/components/UIElements/Skeleton';
 import SearchBar, { ThemeContext } from '../../shared/components/UIElements/SearchBar';
+import ThemeToggle from '../../shared/components/UIElements/ThemeToggle';
 
 const UserPlaces = () => {
   const [loadedPlaces, setLoadedPlaces] = useState();
@@ -106,14 +107,21 @@ const UserPlaces = () => {
   return (
     <ThemeContext.Provider value={{ theme, toggleTheme }}>
       <ErrorModal error={error} onClear={clearError} />
-      <SearchBar onSearch={handleSearch} placeholder="Search places by title, description, or address..." instant />
+      <div style={{ position: 'relative', minHeight: '3.5rem' }}>
+        <ThemeToggle theme={theme} toggleTheme={toggleTheme} />
+        <div style={{ maxWidth: 540, margin: '0 auto' }}>
+          <SearchBar onSearch={handleSearch} placeholder="Search places by title, description, or address..." instant />
+        </div>
+      </div>
       {(isLoading || showSkeleton) && (
         <div className="center">
-          <ul className="place-list">{skeletons}</ul>
+          <ul className="place-list fade-in">{skeletons}</ul>
         </div>
       )}
       {!isLoading && !showSkeleton && loadedPlaces && (
-        <PlaceList items={filteredPlaces} onDeletePlace={placeDeletedHandler} />
+        <div className="fade-in">
+          <PlaceList items={filteredPlaces} onDeletePlace={placeDeletedHandler} />
+        </div>
       )}
     </ThemeContext.Provider>
   );

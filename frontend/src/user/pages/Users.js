@@ -6,6 +6,7 @@ import LoadingSpinner from '../../shared/components/UIElements/LoadingSpinner';
 import { useHttpClient } from '../../shared/hooks/http-hook';
 import Skeleton from '../../shared/components/UIElements/Skeleton';
 import SearchBar, { ThemeContext } from '../../shared/components/UIElements/SearchBar';
+import ThemeToggle from '../../shared/components/UIElements/ThemeToggle';
 
 const Users = () => {
   const { isLoading, error, sendRequest, clearError } = useHttpClient();
@@ -13,7 +14,6 @@ const Users = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [showSkeleton, setShowSkeleton] = useState(true);
   const [theme, setTheme] = useState(() => localStorage.getItem('theme') || 'light');
-
   const toggleTheme = useCallback(() => {
     setTheme(prev => {
       const next = prev === 'dark' ? 'light' : 'dark';
@@ -79,13 +79,22 @@ const Users = () => {
   return (
     <ThemeContext.Provider value={{ theme, toggleTheme }}>
       <ErrorModal error={error} onClear={clearError} />
-      <SearchBar onSearch={handleSearch} placeholder="Search users by name or email..." instant />
+      <div style={{ position: 'relative', minHeight: '3.5rem' }}>
+        <ThemeToggle theme={theme} toggleTheme={toggleTheme} />
+        <div style={{ maxWidth: 540, margin: '0 auto' }}>
+          <SearchBar onSearch={handleSearch} placeholder="Search users by name or email..." instant />
+        </div>
+      </div>
       {(isLoading || showSkeleton) && (
         <div className="center">
-          <ul className="users-list">{skeletons}</ul>
+          <ul className="users-list fade-in">{skeletons}</ul>
         </div>
       )}
-      {!isLoading && !showSkeleton && loadedUsers && <UsersList items={filteredUsers} />}
+      {!isLoading && !showSkeleton && loadedUsers && (
+        <div className="fade-in">
+          <UsersList items={filteredUsers} />
+        </div>
+      )}
     </ThemeContext.Provider>
   );
 };

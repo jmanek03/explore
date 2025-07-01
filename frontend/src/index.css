@@ -178,3 +178,16 @@ h1, h2, h3, h4, h5, h6 {
   align-items: center;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
 }
+
+.fade-in {
+  animation: fadeIn 0.55s cubic-bezier(.4,0,.2,1);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(16px);}
+  to { opacity: 1; transform: translateY(0);}
+}
+
+body, .card, .auth-card, .main-header, .side-drawer, .modal, .users-list, .place-list, .user-item a, .place-item__content {
+  transition: background 0.25s cubic-bezier(.4,0,.2,1), color 0.25s cubic-bezier(.4,0,.2,1), border-color 0.25s cubic-bezier(.4,0,.2,1);
+}

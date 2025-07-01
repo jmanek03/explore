@@ -94,7 +94,7 @@ const signup = async (req, res, next) => {
 
   res
     .status(201)
-    .json({ userId: createdUser.id, email: createdUser.email, token: token });
+    .json({ userId: createdUser.id, email: createdUser.email, token: token, name: createdUser.name, image: createdUser.image });
 };
 
 const login = async (req, res, next) => {
@@ -157,7 +157,9 @@ const login = async (req, res, next) => {
   res.json({
     userId: existingUser.id,
     email: existingUser.email,
-    token: token
+    token: token,
+    name: existingUser.name,
+    image: existingUser.image
   });
 };
 

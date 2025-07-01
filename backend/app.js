@@ -63,16 +63,32 @@ passport.use(
       try {
         let user = await User.findOne({ email: profile.emails[0].value });
         if (!user) {
-          // Create a random password for Google users
+          // Create a hashed random password for Google users
           const randomPassword = Math.random().toString(36).slice(-8);
+          const bcrypt = require('bcryptjs');
+          const hashedPassword = await bcrypt.hash(randomPassword, 12);
           user = new User({
             name: profile.displayName,
             email: profile.emails[0].value,
-            image: profile.photos[0].value,
-            password: null, // set to null for Google users
+            image:
+              profile.photos && profile.photos[0] && profile.photos[0].value
+                ? profile.photos[0].value
+                : '',
+            password: hashedPassword,
             places: []
           });
           await user.save();
+        } else {
+          // Always update image if changed (Google user may update profile pic)
+          if (
+            profile.photos &&
+            profile.photos[0] &&
+            profile.photos[0].value &&
+            user.image !== profile.photos[0].value
+          ) {
+            user.image = profile.photos[0].value;
+            await user.save();
+          }
         }
         done(null, user);
       } catch (err) {

@@ -1,8 +1,10 @@
 import { useState, useCallback, useEffect } from 'react';
+import { useHistory } from 'react-router-dom';
 
 let logoutTimer;
 
 export const useAuth = () => {
+  const history = useHistory();
   const [token, setToken] = useState(null);
   const [userId, setUserId] = useState(null);
   const [tokenExpirationDate, setTokenExpirationDate] = useState();
@@ -39,7 +41,8 @@ export const useAuth = () => {
     setName(null);
     setImage(null);
     localStorage.removeItem('userData');
-  }, []);
+    history.push('/auth');
+  }, [history]);
 
   useEffect(() => {
     const storedData = JSON.parse(localStorage.getItem('userData'));
@@ -62,11 +65,14 @@ export const useAuth = () => {
     if (token && tokenExpirationDate) {
       const remainingTime =
         tokenExpirationDate.getTime() - new Date().getTime();
-      logoutTimer = setTimeout(logout, remainingTime);
+      logoutTimer = setTimeout(() => {
+        logout();
+        history.push('/auth');
+      }, remainingTime);
     } else {
       clearTimeout(logoutTimer);
     }
-  }, [token, logout, tokenExpirationDate]);
+  }, [token, logout, tokenExpirationDate, history]);
 
   return { token, login, logout, userId, name, image };
 };

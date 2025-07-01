@@ -263,33 +263,19 @@
     height: auto;
     min-height: 100vh;
   }
-  .auth-form-section,
-  .auth-image-section {
+  .auth-form-section {
     flex: unset;
-    width: 100vw;
+    width: 100%;
     max-width: unset;
     min-width: unset;
-    min-height: 320px;
-    height: auto;
+    padding: 2rem 1rem;
   }
-  .auth-image {
-    height: 300px;
-    border-radius: 0 0 1rem 1rem;
+  .auth-image-section {
+    display: none;
   }
-  .auth-card,
-  .authentication.auth-card,
-  .auth-card.small-font {
-    font-size: 0.89rem;
-  }
-  .authentication__header {
-    font-size: 1.08rem;
-  }
-  .authentication__subtitle {
-    font-size: 0.89rem;
-  }
-  .image-upload__preview {
-    width: 7rem;
-    height: 7rem;
-    font-size: 0.75rem;
+  .auth-card {
+    box-shadow: none;
+    border: none;
+    padding: 1rem;
   }
 }

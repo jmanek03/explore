@@ -1,29 +1,52 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 
 import UsersList from '../components/UsersList';
 import ErrorModal from '../../shared/components/UIElements/ErrorModal';
 import LoadingSpinner from '../../shared/components/UIElements/LoadingSpinner';
 import { useHttpClient } from '../../shared/hooks/http-hook';
 import Skeleton from '../../shared/components/UIElements/Skeleton';
-import SearchBar from '../../shared/components/UIElements/SearchBar';
+import SearchBar, { ThemeContext } from '../../shared/components/UIElements/SearchBar';
 
 const Users = () => {
   const { isLoading, error, sendRequest, clearError } = useHttpClient();
   const [loadedUsers, setLoadedUsers] = useState();
   const [searchTerm, setSearchTerm] = useState('');
+  const [showSkeleton, setShowSkeleton] = useState(true);
+  const [theme, setTheme] = useState(() => localStorage.getItem('theme') || 'light');
+
+  const toggleTheme = useCallback(() => {
+    setTheme(prev => {
+      const next = prev === 'dark' ? 'light' : 'dark';
+      localStorage.setItem('theme', next);
+      document.body.classList.toggle('dark', next === 'dark');
+      return next;
+    });
+  }, []);
 
   useEffect(() => {
+    document.body.classList.toggle('dark', theme === 'dark');
+  }, [theme]);
+
+  useEffect(() => {
+    let timeout;
     const fetchUsers = async () => {
       try {
         const responseData = await sendRequest(
           process.env.REACT_APP_BACKEND_URL + '/users'
         );
-
         setLoadedUsers(responseData.users);
-      } catch (err) {}
+        // Keep skeleton for at least 800ms
+        timeout = setTimeout(() => setShowSkeleton(false), 1000);
+      } catch (err) {
+        setShowSkeleton(false);
+      }
     };
     fetchUsers();
+    return () => clearTimeout(timeout);
   }, [sendRequest]);
+
+  // Filter as you type (not just on submit)
+  const handleSearch = value => setSearchTerm(value);
 
   const filteredUsers = loadedUsers
     ? loadedUsers.filter(
@@ -54,14 +77,16 @@ const Users = () => {
   ));
 
   return (
-    <React.Fragment>
+    <ThemeContext.Provider value={{ theme, toggleTheme }}>
       <ErrorModal error={error} onClear={clearError} />
-      <SearchBar onSearch={setSearchTerm} placeholder="Search users by name or email..." />
-      {isLoading && (
-        <ul className="users-list">{skeletons}</ul>
+      <SearchBar onSearch={handleSearch} placeholder="Search users by name or email..." instant />
+      {(isLoading || showSkeleton) && (
+        <div className="center">
+          <ul className="users-list">{skeletons}</ul>
+        </div>
       )}
-      {!isLoading && loadedUsers && <UsersList items={filteredUsers} />}
-    </React.Fragment>
+      {!isLoading && !showSkeleton && loadedUsers && <UsersList items={filteredUsers} />}
+    </ThemeContext.Provider>
   );
 };
 

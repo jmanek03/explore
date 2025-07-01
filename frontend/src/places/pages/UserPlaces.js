@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
 
 import PlaceList from '../components/PlaceList';
@@ -6,26 +6,50 @@ import ErrorModal from '../../shared/components/UIElements/ErrorModal';
 import LoadingSpinner from '../../shared/components/UIElements/LoadingSpinner';
 import { useHttpClient } from '../../shared/hooks/http-hook';
 import Skeleton from '../../shared/components/UIElements/Skeleton';
-import SearchBar from '../../shared/components/UIElements/SearchBar';
+import SearchBar, { ThemeContext } from '../../shared/components/UIElements/SearchBar';
 
 const UserPlaces = () => {
   const [loadedPlaces, setLoadedPlaces] = useState();
   const [searchTerm, setSearchTerm] = useState('');
+  const [showSkeleton, setShowSkeleton] = useState(true);
   const { isLoading, error, sendRequest, clearError } = useHttpClient();
 
   const userId = useParams().userId;
 
+  const [theme, setTheme] = useState(() => localStorage.getItem('theme') || 'light');
+  const toggleTheme = useCallback(() => {
+    setTheme(prev => {
+      const next = prev === 'dark' ? 'light' : 'dark';
+      localStorage.setItem('theme', next);
+      document.body.classList.toggle('dark', next === 'dark');
+      return next;
+    });
+  }, []);
+
   useEffect(() => {
+    document.body.classList.toggle('dark', theme === 'dark');
+  }, [theme]);
+
+  useEffect(() => {
+    let timeout;
     const fetchPlaces = async () => {
       try {
         const responseData = await sendRequest(
           `${process.env.REACT_APP_BACKEND_URL}/places/user/${userId}`
         );
         setLoadedPlaces(responseData.places);
-      } catch (err) {}
+        // Keep skeleton for at least 800ms
+        timeout = setTimeout(() => setShowSkeleton(false), 1000);
+      } catch (err) {
+        setShowSkeleton(false);
+      }
     };
     fetchPlaces();
+    return () => clearTimeout(timeout);
   }, [sendRequest, userId]);
+
+  // Filter as you type (not just on submit)
+  const handleSearch = value => setSearchTerm(value);
 
   const placeDeletedHandler = deletedPlaceId => {
     setLoadedPlaces(prevPlaces =>
@@ -80,16 +104,18 @@ const UserPlaces = () => {
   ));
 
   return (
-    <React.Fragment>
+    <ThemeContext.Provider value={{ theme, toggleTheme }}>
       <ErrorModal error={error} onClear={clearError} />
-      <SearchBar onSearch={setSearchTerm} placeholder="Search places by title, description, or address..." />
-      {isLoading && (
-        <ul className="place-list">{skeletons}</ul>
+      <SearchBar onSearch={handleSearch} placeholder="Search places by title, description, or address..." instant />
+      {(isLoading || showSkeleton) && (
+        <div className="center">
+          <ul className="place-list">{skeletons}</ul>
+        </div>
       )}
-      {!isLoading && loadedPlaces && (
+      {!isLoading && !showSkeleton && loadedPlaces && (
         <PlaceList items={filteredPlaces} onDeletePlace={placeDeletedHandler} />
       )}
-    </React.Fragment>
+    </ThemeContext.Provider>
   );
 };
 

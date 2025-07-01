@@ -56,21 +56,21 @@ const Users = () => {
       )
     : [];
 
-  // Skeletons for user cards
+  // Improved skeletons for user cards
   const skeletons = Array.from({ length: 3 }).map((_, idx) => (
     <li className="user-item" key={idx}>
-      <div className="user-item__content" style={{ padding: 0 }}>
+      <div className="user-item__content">
         <div className="user-item__image">
-          <Skeleton width="4.5rem" height="4.5rem" borderRadius="50%" />
+          <Skeleton width="4rem" height="4rem" borderRadius="50%" />
         </div>
-        <div className="user-item__info" style={{ marginTop: '0.5rem' }}>
+        <div className="user-item__info">
           <Skeleton
             width="7rem"
-            height="1.2rem"
+            height="1.1rem"
             borderRadius="0.5rem"
-            style={{ marginBottom: '0.5rem' }}
+            style={{ marginBottom: '0.4rem' }}
           />
-          <Skeleton width="4rem" height="1rem" borderRadius="0.5rem" />
+          <Skeleton width="4.5rem" height="0.9rem" borderRadius="0.5rem" />
         </div>
       </div>
     </li>
@@ -79,9 +79,11 @@ const Users = () => {
   return (
     <ThemeContext.Provider value={{ theme, toggleTheme }}>
       <ErrorModal error={error} onClear={clearError} />
-      <div style={{ position: 'relative', minHeight: '3.5rem' }}>
-        <ThemeToggle theme={theme} toggleTheme={toggleTheme} />
-        <div style={{ maxWidth: 540, margin: '0 auto' }}>
+      <div className="users-header-row">
+        <div className="users-header-row__toggle">
+          <ThemeToggle theme={theme} toggleTheme={toggleTheme} />
+        </div>
+        <div className="users-header-row__search">
           <SearchBar onSearch={handleSearch} placeholder="Search users by name or email..." instant />
         </div>
       </div>

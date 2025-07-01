@@ -40,10 +40,12 @@ app.use((req, res, next) => {
       "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net;",
       "img-src 'self' data: https://maps.googleapis.com https://maps.gstatic.com https://cdn.jsdelivr.net;",
       "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://maps.googleapis.com https://maps.gstatic.com https://cdn.jsdelivr.net;",
+      "connect-src 'self' https://explore-7o2c.onrender.com;",
     ].join(" ")
   );
   next();
 });
+
 
 
 app.use("/api/places", placesRoutes);

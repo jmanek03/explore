@@ -38,12 +38,13 @@ app.use((req, res, next) => {
       "default-src 'self';",
       "font-src 'self' https://fonts.gstatic.com data:;",
       "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net;",
-      "img-src 'self' data: https://cdn.jsdelivr.net https://maps.googleapis.com https://maps.gstatic.com;",
-      "script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://maps.googleapis.com https://maps.gstatic.com;",
+      "img-src 'self' data: https://maps.googleapis.com https://maps.gstatic.com https://cdn.jsdelivr.net;",
+      "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://maps.googleapis.com https://maps.gstatic.com https://cdn.jsdelivr.net;",
     ].join(" ")
   );
   next();
 });
+
 
 app.use("/api/places", placesRoutes);
 app.use("/api/users", usersRoutes);

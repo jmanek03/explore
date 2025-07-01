@@ -68,14 +68,6 @@
     flex: 1 1 0;
   }
 }
-  box-shadow: 0 1px 3px rgba(37, 99, 235, 0.06);
-  outline: none;
-  font-size: 1rem;
-  margin-left: 0.5rem;
-  position: relative;
-  z-index: 10;
-  padding: 0;
-}
 
 .theme-toggle-btn--corner {
   position: static;
